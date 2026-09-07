@@ -18,4 +18,4 @@ jobs:
           python-version: '3.12'
       - run: python3 -m unittest discover -s tests -v
       - if: runner.os == 'macOS'
-        run: ./scripts/build.sh 0.1.0
+        run: ./scripts/build.sh

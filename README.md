@@ -67,7 +67,7 @@ Camera XML, subtitles, XMP sidecars and low-resolution proxies such as DJI `.LRF
 - Logs: the `logs/` directory, retaining the latest 30 run logs
 - Login agent: `~/Library/LaunchAgents/io.github.andz200zx.immich-card-sync.plist`
 
-To reconnect to another server/account, run the installer from Terminal with `--configure`. Finish pending imports before switching accounts. Keep configuration and state private: they contain server addresses, file names and asset identifiers, although not the API key.
+To reconnect to another server/account, run the installer from Terminal with `--configure`. Finish pending imports before switching accounts. The installer checks the new setup before replacing a working installation and restores the previous app and login setup if activation fails. Keep configuration and state private: they contain server addresses, file names and asset identifiers, although not the API key.
 
 **Uninstall Immich Card Sync.command** disables login startup. Quit the app if it was launched manually. The app, settings, logs and Keychain entry are retained; remove those yourself only if you no longer need them. No library or card files are removed.
 
@@ -77,14 +77,23 @@ Building requires macOS with Xcode or Command Line Tools, plus Python 3.10+ for 
 
 ```sh
 python3 -m unittest discover -s tests -v
-./scripts/build.sh 0.1.0
+./scripts/build.sh
 ```
 
-The build cross-compiles Swift for arm64 and x86_64, combines them into a universal app, ad-hoc signs it, and creates a ZIP plus checksums in `dist/`. The Python backend is included as source in the app bundle; the installer records the installed Python executable path.
+The build uses the version in `src/Info.plist` unless a version argument is supplied. It cross-compiles Swift for arm64 and x86_64, combines them into a universal app, ad-hoc signs it, and creates a ZIP plus checksums in `dist/`. The Python backend is included as source in the app bundle; the installer records the installed Python executable path.
 
 Tests use a temporary local HTTP server. They exercise repeated imports, streamed upload bytes, interrupted responses, date tags, two-camera filename collisions, changed files, JPEG covers, pending metadata, conflicting stacks, cancellation and permanent server failures. Tests never connect to a personal Immich server. A macOS volume-event diagnostic is available as `"Immich Card Sync.app/Contents/MacOS/Immich Card Sync" --observe-card-mount`.
 
-CI runs the tests and builds the universal app. Pushing a `vX.Y.Z` tag runs the release workflow and publishes the ZIP and checksums automatically.
+CI runs the tests and builds the universal app. Pushing a `vX.Y.Z` tag runs the release workflow and publishes the ZIP and checksums automatically. Rerunning a published release preserves its existing downloads.
+
+A maintainer can also publish a locally tested build if hosted runners are unavailable:
+
+```sh
+./scripts/build.sh 0.1.1
+gh release create v0.1.1 dist/Immich-Card-Sync-0.1.1-universal.zip dist/Immich-Card-Sync-0.1.1-SHA256SUMS.txt --verify-tag --title v0.1.1 --notes-file .github/release-notes.md
+```
+
+Push the matching source tag before using `--verify-tag`.
 
 ## Contributing
 

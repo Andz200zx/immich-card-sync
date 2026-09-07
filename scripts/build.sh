@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-version="${1:-0.1.0}"
+version="${1:-$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' src/Info.plist)}"
 if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo 'Use a version like 0.1.0' >&2; exit 1; fi
 build_dir="build/$version"
 package="$build_dir/Immich Card Sync"
@@ -15,6 +15,7 @@ done
 lipo -create "$build_dir/CardSync-arm64" "$build_dir/CardSync-x86_64" -output "$app/Contents/MacOS/Immich Card Sync"
 cp src/Info.plist "$app/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $version" "$app/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $version" "$app/Contents/Info.plist"
 cp src/ingest.py "$app/Contents/Resources/ingest.py"
 cp scripts/install.py "$package/scripts/install.py"
 cp scripts/*.command "$package/"

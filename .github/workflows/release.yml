@@ -21,4 +21,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release create "$RELEASE_TAG" dist/*.zip dist/*SHA256SUMS.txt --verify-tag --title "$RELEASE_TAG" --notes-file .github/release-notes.md
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release already published; preserving its existing downloads."
+          else
+            gh release create "$RELEASE_TAG" dist/*.zip dist/*SHA256SUMS.txt --verify-tag --title "$RELEASE_TAG" --notes-file .github/release-notes.md
+          fi
