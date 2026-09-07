@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Immich Card Sync</string>
+	<key>CFBundleExecutable</key>
+	<string>Immich Card Sync</string>
+	<key>CFBundleIdentifier</key>
+	<string>io.github.andz200zx.immich-card-sync</string>
+	<key>CFBundleName</key>
+	<string>Immich Card Sync</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Connect to your Immich photo server on your local NAS.</string>
+	<key>NSRemovableVolumesUsageDescription</key>
+	<string>Read camera cards to upload new photos and videos to your Immich library.</string>
+</dict>
+</plist>
