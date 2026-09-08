@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0
+
+- add an optional Mac RAW development worker with a separate installer and login service
+- develop full-resolution sRGB JPEG companions using RawTherapee and ExifTool
+- preserve originals, capture metadata, archive visibility and import tags; use JPEG stack covers
+- resume metadata scans and interrupted uploads with durable per-asset receipts
+- skip existing JPEGs and preserve conflicting stacks for review
+- bound conversion threads, batch duration, scratch space and retained logs
+- include local sample rendering, status and targeted retry commands
+
 ## 0.1.1
 
 - validate upgrades before replacing a working installation and restore it if activation fails

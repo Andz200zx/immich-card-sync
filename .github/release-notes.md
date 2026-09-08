@@ -1,7 +1,11 @@
-A lightweight menu-bar app for importing camera photos and videos into Immich.
+adds an optional RAW-to-JPEG worker for a processing Mac, alongside the existing camera-card importer.
 
-Download the universal ZIP for Apple Silicon and Intel Macs. Requires macOS 13+ and an installed Python 3.10+ runtime. Extract it, run **Install Immich Card Sync.command**, and supply your Immich URL and API key. The built app is included; no Xcode installation is needed.
+- develops full-resolution JPEG companions for RAWs without JPEG equivalents, with verified JPEG stack covers
+- supports resumable existing-library backfill and checks for new uploads in small batches
+- preserves originals, resolved capture times, archive visibility and import tags
+- leaves existing JPEGs, ambiguous matches and conflicting stacks for review
+- processes one RAW at a time, with bounded working space and retained logs
 
-The app prompts on card insertion, skips files already present, stacks RAW/JPEG pairs with JPEG covers, and tags new batches by upload date. See the README for API-key permissions and recovery behavior.
+download the universal ZIP and read `RAW_WORKER.md` before running **Install RAW Worker.command** on the processing Mac. the optional worker needs Python, RawTherapee and ExifTool. the official RawTherapee 5.13 Apple Silicon package requires macOS Tahoe 26 or newer. the card importer retains its macOS 13 / Python 3.10 minimum requirements.
 
-The binary is ad-hoc signed and is not Apple-notarized. macOS may require explicit approval before opening it. SHA-256 checksums are included. This is an initial release targeting the Immich v3.1 API; test it with a card you have backed up.
+the built card app is included for Apple Silicon and Intel. it is ad-hoc signed, not Apple-notarized; SHA-256 checksums accompany the download. camera support depends on the installed RAW decoder. existing installations keep their separate configurations and progress.

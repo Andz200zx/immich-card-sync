@@ -19,6 +19,12 @@ A small macOS menu-bar app that imports camera photos and videos into your own [
 
 The app listens for macOS volume events while idle. Python runs only during a sync or while finishing pending work. It never sends your media to this project or to GitHub.
 
+### Optional RAW-to-JPEG worker
+
+The download also includes a separate **RAW Worker** for an always-on processing Mac, such as a Mac mini. It finds RAWs without JPEG equivalents in your existing Immich library, develops full-resolution JPEGs, uploads them, and uses them as RAW/JPEG stack covers. It continues checking for new uploads in small, resumable batches. The SD-card helper remains independent and lightweight.
+
+The worker uses RawTherapee and ExifTool, supports Nikon NEF, Canon CR2/CR3, Sony ARW, DJI DNG and other listed formats, and preserves originals, capture metadata, archive visibility and import tags. **Read [RAW_WORKER.md](RAW_WORKER.md) for its separate dependencies, permissions, setup, sample rendering and controls.** Camera-model support depends on the installed decoder; ambiguous matches and unsupported files are reported for review.
+
 ## Download and install
 
 1. Download the **universal ZIP** from [Releases](https://github.com/Andz200zx/immich-card-sync/releases/latest), then extract it. It contains the built app for **Apple Silicon and Intel Macs**.
@@ -89,8 +95,8 @@ CI runs the tests and builds the universal app. Pushing a `vX.Y.Z` tag runs the 
 A maintainer can also publish a locally tested build if hosted runners are unavailable:
 
 ```sh
-./scripts/build.sh 0.1.1
-gh release create v0.1.1 dist/Immich-Card-Sync-0.1.1-universal.zip dist/Immich-Card-Sync-0.1.1-SHA256SUMS.txt --verify-tag --title v0.1.1 --notes-file .github/release-notes.md
+./scripts/build.sh 0.2.0
+gh release create v0.2.0 dist/Immich-Card-Sync-0.2.0-universal.zip dist/Immich-Card-Sync-0.2.0-SHA256SUMS.txt --verify-tag --title v0.2.0 --notes-file .github/release-notes.md
 ```
 
 Push the matching source tag before using `--verify-tag`.

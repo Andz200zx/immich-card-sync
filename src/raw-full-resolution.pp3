@@ -1,0 +1,12 @@
+# recipe revision 2: companion EXIF includes the resolved capture timezone and subseconds.
+[Resize]
+Enabled=false
+
+[Crop]
+Enabled=false
+
+[Color Management]
+OutputProfile=RTv4_sRGB
+
+[White Balance]
+Setting=Camera
