@@ -229,6 +229,8 @@ def jpeg_equivalent(api, raw, ignore_id=None):
     exif = raw.get('exifInfo') or {}
     taken = parse_date(exif.get('dateTimeOriginal'))
     if not taken or not exif.get('model'):
+        if raw.get('hasMetadata') is False:
+            raise ingest.IngestError('Waiting for Immich to extract the RAW capture metadata.')
         raise Review('Capture date or camera model is missing; cannot safely rule out an existing JPEG.')
     query = {'type': 'IMAGE', 'takenAfter': (taken - dt.timedelta(seconds=1)).isoformat(),
              'takenBefore': (taken + dt.timedelta(seconds=1)).isoformat(),

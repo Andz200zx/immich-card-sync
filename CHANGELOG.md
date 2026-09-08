@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- retry newly uploaded RAWs while Immich is still extracting capture metadata
+- keep completed metadata with missing capture details available for manual review
+
 ## 0.2.0
 
 - add an optional Mac RAW development worker with a separate installer and login service

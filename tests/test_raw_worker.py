@@ -156,6 +156,21 @@ class WorkerTests(unittest.TestCase):
             self.process()
         self.assertEqual(self.prepared, 0)
 
+    def test_new_raw_waits_for_metadata_and_then_processes_automatically(self):
+        raw=self.api.assets[self.raw['id']]
+        raw['hasMetadata']=False
+        previous=raw['exifInfo']
+        raw['exifInfo']={}
+        with self.assertRaises(worker.ingest.IngestError) as raised:
+            self.process()
+        self.assertNotIsInstance(raised.exception,worker.Review)
+        self.assertEqual(self.prepared,0)
+        raw['hasMetadata']=True
+        raw['exifInfo']=previous
+        self.process()
+        self.assertEqual(self.store.job(self.raw['id'])['status'],'done')
+        self.assertEqual(self.api.uploads,1)
+
     def test_existing_raw_stack_is_preserved(self):
         second = asset('DSC00002.NEF', data=b'second raw')
         self.api.assets[second['id']] = second
