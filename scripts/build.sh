@@ -6,7 +6,7 @@ if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo 'Use a version like
 build_dir="build/$version"
 package="$build_dir/Immich Card Sync"
 app="$package/Immich Card Sync.app"
-mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources" "$package/scripts" "$package/RAW Worker" dist
+mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources" "$package/scripts" dist
 sdk="$(xcrun --sdk macosx --show-sdk-path)"
 for arch in arm64 x86_64; do
   xcrun swiftc -sdk "$sdk" -target "$arch-apple-macosx13.0" -module-cache-path "$build_dir/module-cache" \
@@ -18,10 +18,8 @@ cp src/Info.plist "$app/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $version" "$app/Contents/Info.plist"
 cp src/ingest.py "$app/Contents/Resources/ingest.py"
 cp scripts/install.py "$package/scripts/install.py"
-cp scripts/install_worker.py "$package/scripts/install_worker.py"
-cp src/ingest.py src/raw_worker.py src/raw_service.py src/raw-full-resolution.pp3 "$package/RAW Worker/"
 cp scripts/*.command "$package/"
-cp README.md RAW_WORKER.md LICENSE "$package/"
+cp README.md LICENSE "$package/"
 chmod +x "$package/"*.command
 # Strip build-directory metadata before ad-hoc signing our own generated bundle.
 xattr -cr "$app"

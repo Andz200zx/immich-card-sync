@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+- move JPEG generation into the independent [Immich RAW Worker](https://github.com/Andz200zx/immich-raw-worker) repository and download
+- keep this package focused on camera-card photo/video imports, upload-date tags and existing RAW/JPEG pairs
+- retry transient macOS launch-service activation errors during upgrades and recovery
+
 ## 0.2.1
 
 - retry newly uploaded RAWs while Immich is still extracting capture metadata

@@ -178,11 +178,7 @@ class API:
             raise IngestError(f'File changed before upload: {record["relative"]}')
         boundary = 'immich-card-' + uuid.uuid4().hex
         stamp = dt.datetime.fromtimestamp(record['signature'][1] / 1e9, dt.timezone.utc).isoformat().replace('+00:00','Z')
-        fields = {'fileCreatedAt': record.get('fileCreatedAt', stamp),
-                  'fileModifiedAt': record.get('fileModifiedAt', stamp), 'filename': p.name}
-        # Derived companions retain their source's timeline/archive visibility and capture date.
-        if 'visibility' in record:
-            fields['visibility'] = record['visibility']
+        fields = {'fileCreatedAt': stamp, 'fileModifiedAt': stamp, 'filename': p.name}
         prefix = b''
         for name, value in fields.items():
             prefix += f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'.encode()

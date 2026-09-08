@@ -4,4 +4,4 @@ Please use GitHub private vulnerability reporting for credential exposure, unaut
 
 This app reads removable media and sends it to the configured Immich server. Credentials are stored in the macOS login Keychain and retrieved by the system `security` utility; they are never embedded in release binaries. Settings, cache and logs stay under the current user's Application Support directory.
 
-The current 0.1.x series receives fixes on a best-effort basis. Downloads are ad-hoc signed, not Apple-notarized. Release checksums are published beside each ZIP. There is no automatic update mechanism.
+The latest release receives fixes on a best-effort basis. Downloads are ad-hoc signed, not Apple-notarized. Release checksums are published beside each ZIP. There is no automatic update mechanism.

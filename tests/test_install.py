@@ -87,7 +87,7 @@ class UpgradeTests(unittest.TestCase):
                 label = plistlib.loads(path.read_bytes())['Label']
                 if self.fail_bootstrap:
                     self.fail_bootstrap = False
-                    status = 5
+                    status = 78
                 else:
                     self.loaded.add(label)
         if status and kwargs.get('check'):
@@ -137,6 +137,26 @@ class UpgradeTests(unittest.TestCase):
             with self.assertRaises(subprocess.CalledProcessError):
                 installer.install(self.package, self.home)
         self.assert_unchanged()
+
+    def test_transient_bootstrap_error_is_retried_without_losing_history(self):
+        failed = []
+        def command(argv, **kwargs):
+            if argv[:2] == ['/bin/launchctl', 'bootstrap'] and not failed:
+                failed.append(True)
+                raise subprocess.CalledProcessError(5, argv)
+            return self.command(argv, **kwargs)
+        with patch.object(installer.subprocess, 'run', side_effect=command), patch.object(installer.time, 'sleep'):
+            installer.install(self.package, self.home)
+        self.assertEqual(self.loaded, {installer.LABEL})
+        self.assertEqual((self.state/'hashes.sqlite').read_text(), 'original-cache')
+        self.assertEqual((self.app/'Contents/Resources/ingest.py').read_text(), 'new')
+
+    def test_repeated_bootstrap_error_has_a_bounded_retry_count(self):
+        with patch.object(installer.subprocess, 'run', side_effect=subprocess.CalledProcessError(5, [])) as run, \
+             patch.object(installer.time, 'sleep'):
+            with self.assertRaises(subprocess.CalledProcessError):
+                installer.bootstrap('gui/501', self.agent)
+        self.assertEqual(run.call_count, 6)
 
     def test_changed_library_with_pending_work_is_rejected(self):
         (self.state/'pending-stacks.json').write_text('[{"ids":["jpeg", "raw"]}]')

@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.parse
 import urllib.request
 import uuid
@@ -17,6 +18,18 @@ import uuid
 LABEL = 'io.github.andz200zx.immich-card-sync'
 SERVICE = 'immich-card-sync'
 LEGACY_LABEL = 'local.andz.immich-card-sync'
+
+def bootstrap(domain, path):
+    """Allow launchd time to finish unloading an earlier instance of this service."""
+    for attempt, delay in enumerate([0, 0.5, 1, 2, 3, 5]):
+        if delay:
+            time.sleep(delay)
+        try:
+            subprocess.run(['/bin/launchctl', 'bootstrap', domain, str(path)], check=True, capture_output=True)
+            return
+        except subprocess.CalledProcessError as error:
+            if error.returncode != 5 or attempt == 5:
+                raise
 
 def normalize_url(value):
     u = urllib.parse.urlsplit(value.strip())
@@ -142,7 +155,7 @@ def install(package, home, reconfigure=False):
                             if path.name != 'sync.lock':
                                 replace(path, None, 'state/' + path.name)
                     bootstrap_attempted = True
-                    subprocess.run(['/bin/launchctl', 'bootstrap', domain, str(agent)], check=True)
+                    bootstrap(domain, agent)
                     committed = True
                 except BaseException as error:
                     recovery_errors = []
@@ -161,7 +174,7 @@ def install(package, home, reconfigure=False):
                     for label in stopped:
                         path = agent if label == LABEL else legacy_agent
                         try:
-                            subprocess.run(['/bin/launchctl', 'bootstrap', domain, str(path)], check=True, capture_output=True)
+                            bootstrap(domain, path)
                         except (OSError, subprocess.SubprocessError) as recovery_error:
                             recovery_errors.append(str(recovery_error))
                     if recovery_errors:
